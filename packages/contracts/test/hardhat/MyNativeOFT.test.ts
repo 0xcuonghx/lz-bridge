@@ -5,12 +5,13 @@ import { deployments, ethers } from 'hardhat'
 
 import { Options } from '@layerzerolabs/lz-v2-utilities'
 
-describe('MyOFT Test', function () {
+describe('MyNativeOFT Test', function () {
     // Constant representing a mock Endpoint ID for testing purposes
     const eidA = 1
     const eidB = 2
     // Declaration of variables to be used in the test suite
     let MyOFT: ContractFactory
+    let MyNativeOFT: ContractFactory
     let EndpointV2Mock: ContractFactory
     let ownerA: SignerWithAddress
     let ownerB: SignerWithAddress
@@ -26,6 +27,7 @@ describe('MyOFT Test', function () {
         //
         // We are using a derived contract that exposes a mint() function for testing purposes
         MyOFT = await ethers.getContractFactory('MyOFTMock')
+        MyNativeOFT = await ethers.getContractFactory('MyNativeOFTMock')
 
         // Fetching the first three signers (accounts) from Hardhat's local Ethereum network
         const signers = await ethers.getSigners()
@@ -52,7 +54,7 @@ describe('MyOFT Test', function () {
         mockEndpointV2B = await EndpointV2Mock.deploy(eidB)
 
         // Deploying two instances of MyOFT contract with different identifiers and linking them to the mock LZEndpoint
-        myOFTA = await MyOFT.deploy('aOFT', 'aOFT', mockEndpointV2A.address, ownerA.address)
+        myOFTA = await MyNativeOFT.deploy('aOFT', 'aOFT', mockEndpointV2A.address, ownerA.address)
         myOFTB = await MyOFT.deploy('bOFT', 'bOFT', mockEndpointV2B.address, ownerB.address)
 
         // Setting destination endpoints in the LZEndpoint mock for each MyOFT instance
@@ -65,13 +67,22 @@ describe('MyOFT Test', function () {
     })
 
     // A test case to verify token transfer functionality
-    it('should send a token from A address to B address via each OFT', async function () {
-        // Minting an initial amount of tokens to ownerA's address in the myOFTA contract
-        const initialAmount = ethers.utils.parseEther('100')
-        await myOFTA.mint(ownerA.address, initialAmount)
+    it('should send a token from A address to B address via each OFT using default', async function () {
+        expect(await ethers.provider.getBalance(mockEndpointV2A.address)).to.be.eql(ethers.utils.parseEther('0'))
 
-        // Defining the amount of tokens to send and constructing the parameters for the send operation
-        const tokensToSend = ethers.utils.parseEther('1')
+        // ensure they're both allocated initial amounts
+        expect(await myOFTA.balanceOf(ownerA.address)).to.eql(ethers.utils.parseEther('0'))
+        expect(await myOFTB.balanceOf(ownerA.address)).to.eql(ethers.utils.parseEther('0'))
+        expect(await ethers.provider.getBalance(myOFTA.address)).to.eql(ethers.utils.parseEther('0'))
+
+        const depositAmount = ethers.utils.parseEther('7')
+        await myOFTA.deposit({ value: depositAmount })
+
+        expect(await myOFTA.balanceOf(ownerA.address)).to.eql(depositAmount)
+        expect(await ethers.provider.getBalance(myOFTA.address)).to.be.eql(depositAmount)
+
+        const leftOverAmount = ethers.utils.parseEther('1')
+        const totalAmount = ethers.utils.parseEther('6')
 
         // Defining extra message execution options for the send operation
         // @dev: The amount of gas you'd provide for the lzReceive call in source chain native tokens. 200000 should be enough for most transactions.
@@ -80,8 +91,8 @@ describe('MyOFT Test', function () {
         const sendParam = [
             eidB,
             ethers.utils.zeroPad(ownerB.address, 32),
-            tokensToSend,
-            tokensToSend,
+            totalAmount,
+            totalAmount,
             options,
             '0x',
             '0x',
@@ -91,14 +102,15 @@ describe('MyOFT Test', function () {
         const [nativeFee] = await myOFTA.quoteSend(sendParam, false)
 
         // Executing the send operation from myOFTA contract
-        await myOFTA.send(sendParam, [nativeFee, 0], ownerA.address, { value: nativeFee })
+        await myOFTA.send(sendParam, [nativeFee, 0], ownerA.address, {
+            value: nativeFee,
+        })
 
-        // Fetching the final token balances of ownerA and ownerB
-        const finalBalanceA = await myOFTA.balanceOf(ownerA.address)
-        const finalBalanceB = await myOFTB.balanceOf(ownerB.address)
-
-        // Asserting that the final balances are as expected after the send operation
-        expect(finalBalanceA.eq(initialAmount.sub(tokensToSend))).to.be.true
-        expect(finalBalanceB.eq(tokensToSend)).to.be.true
+        expect(await ethers.provider.getBalance(myOFTA.address)).to.be.eql(depositAmount)
+        expect(await ethers.provider.getBalance(mockEndpointV2A.address)).to.be.eql(nativeFee) // collects
+        expect(await myOFTA.balanceOf(myOFTA.address)).to.be.eql(totalAmount)
+        expect(await myOFTA.balanceOf(ownerA.address)).to.be.eql(leftOverAmount)
+        expect(await myOFTB.balanceOf(ownerB.address)).to.be.eql(totalAmount)
+        expect(await myOFTB.totalSupply()).to.be.eql(totalAmount)
     })
 })
