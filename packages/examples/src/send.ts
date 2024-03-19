@@ -52,7 +52,7 @@ async function main() {
 
   const sendParam = [
     eidB,
-    ethers.zeroPadBytes(ownerB.address, 32),
+    ethers.zeroPadValue(ownerB.address, 32),
     tokensToSend,
     tokensToSend,
     options,
