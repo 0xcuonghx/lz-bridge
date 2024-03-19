@@ -6,53 +6,69 @@ const sepoliaContract = {
     contractName: 'MyOFT',
 }
 
-const fujiContract = {
-    eid: EndpointId.AVALANCHE_V2_TESTNET,
-    contractName: 'MyOFT',
-}
+// const fujiContract = {
+//     eid: EndpointId.AVALANCHE_V2_TESTNET,
+//     contractName: 'MyOFT',
+// }
 
-const mumbaiContract = {
-    eid: EndpointId.POLYGON_V2_TESTNET,
+// const mumbaiContract = {
+//     eid: EndpointId.POLYGON_V2_TESTNET,
+//     contractName: 'MyOFT',
+// }
+
+const joctContract = {
+    eid: EndpointId.JOC_V2_TESTNET,
     contractName: 'MyOFT',
 }
 
 export default {
     contracts: [
-        {
-            contract: fujiContract,
-        },
+        // {
+        //     contract: fujiContract,
+        // },
         {
             contract: sepoliaContract,
         },
+        // {
+        //     contract: mumbaiContract,
+        // },
         {
-            contract: mumbaiContract,
+            contract: joctContract,
         },
     ],
     connections: [
+        // {
+        //     from: fujiContract,
+        //     to: sepoliaContract,
+        //     config: {},
+        // },
+        // {
+        //     from: fujiContract,
+        //     to: mumbaiContract,
+        // },
+        // {
+        //     from: sepoliaContract,
+        //     to: fujiContract,
+        // },
+        // {
+        //     from: sepoliaContract,
+        //     to: mumbaiContract,
+        // },
+        // {
+        //     from: mumbaiContract,
+        //     to: sepoliaContract,
+        // },
+        // {
+        //     from: mumbaiContract,
+        //     to: fujiContract,
+        // },
         {
-            from: fujiContract,
+            from: joctContract,
             to: sepoliaContract,
-            config: {},
-        },
-        {
-            from: fujiContract,
-            to: mumbaiContract,
         },
         {
             from: sepoliaContract,
-            to: fujiContract,
-        },
-        {
-            from: sepoliaContract,
-            to: mumbaiContract,
-        },
-        {
-            from: mumbaiContract,
-            to: sepoliaContract,
-        },
-        {
-            from: mumbaiContract,
-            to: fujiContract,
+            to: joctContract,
         },
     ],
 }
