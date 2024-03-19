@@ -64,6 +64,11 @@ const config: HardhatUserConfig = {
             url: 'https://rpc.ankr.com/polygon_mumbai',
             accounts,
         },
+        joct: {
+            eid: EndpointId.JOC_V2_TESTNET,
+            url: 'https://rpc-1.testnet.japanopenchain.org:8545',
+            accounts,
+        },
     },
     namedAccounts: {
         deployer: {
