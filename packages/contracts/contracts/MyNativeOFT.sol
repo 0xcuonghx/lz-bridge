@@ -39,11 +39,11 @@ contract MyNativeOFT is OFT, ReentrancyGuard {
         uint32 _dstEid
     ) internal virtual override(OFT) returns (uint256 amountSentLD, uint256 amountReceivedLD) {
         (amountSentLD, amountReceivedLD) = _debitView(_amountLD, _minAmountLD, _dstEid);
-        // if (balanceOf(msg.sender) < amountSentLD) {
-        //     require(balanceOf(msg.sender) + msg.value >= amountSentLD, "NativeOFT: Insufficient msg.value");
-        //     // user can cover difference with additional msg.value ie. wrapping
-        //     _mint(address(msg.sender), amountSentLD - balanceOf(msg.sender));
-        // }
+        if (balanceOf(msg.sender) < amountSentLD) {
+            require(balanceOf(msg.sender) + msg.value >= amountSentLD, "NativeOFT: Insufficient msg.value");
+            // user can cover difference with additional msg.value ie. wrapping
+            _mint(address(msg.sender), amountSentLD - balanceOf(msg.sender));
+        }
         _transfer(msg.sender, address(this), amountSentLD);
     }
 
@@ -52,5 +52,10 @@ contract MyNativeOFT is OFT, ReentrancyGuard {
         (bool success, ) = _to.call{ value: _amountLD }("");
         require(success, "NativeOFT: failed to _credit");
         return _amountLD;
+    }
+
+    function _payNative(uint256 _nativeFee) internal virtual override returns (uint256 nativeFee) {
+        if (msg.value < _nativeFee) revert NotEnoughNative(msg.value);
+        return _nativeFee;
     }
 }

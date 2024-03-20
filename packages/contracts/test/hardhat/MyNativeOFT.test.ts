@@ -81,8 +81,8 @@ describe('MyNativeOFT Test', function () {
         expect(await myOFTA.balanceOf(ownerA.address)).to.eql(depositAmount)
         expect(await ethers.provider.getBalance(myOFTA.address)).to.be.eql(depositAmount)
 
-        const leftOverAmount = ethers.utils.parseEther('1')
-        const totalAmount = ethers.utils.parseEther('6')
+        const leftOverAmount = ethers.utils.parseEther('0')
+        const totalAmount = ethers.utils.parseEther('8')
 
         // Defining extra message execution options for the send operation
         // @dev: The amount of gas you'd provide for the lzReceive call in source chain native tokens. 200000 should be enough for most transactions.
@@ -103,14 +103,61 @@ describe('MyNativeOFT Test', function () {
 
         // Executing the send operation from myOFTA contract
         await myOFTA.send(sendParam, [nativeFee, 0], ownerA.address, {
-            value: nativeFee,
+            value: nativeFee.add(totalAmount.sub(depositAmount)),
         })
-
-        expect(await ethers.provider.getBalance(myOFTA.address)).to.be.eql(depositAmount)
+        expect(await ethers.provider.getBalance(myOFTA.address)).to.be.eql(totalAmount)
         expect(await ethers.provider.getBalance(mockEndpointV2A.address)).to.be.eql(nativeFee) // collects
         expect(await myOFTA.balanceOf(myOFTA.address)).to.be.eql(totalAmount)
         expect(await myOFTA.balanceOf(ownerA.address)).to.be.eql(leftOverAmount)
         expect(await myOFTB.balanceOf(ownerB.address)).to.be.eql(totalAmount)
         expect(await myOFTB.totalSupply()).to.be.eql(totalAmount)
+    })
+
+    it('should send a token from A address to B address via each OFT with enough native', async function () {
+        expect(await ethers.provider.getBalance(mockEndpointV2A.address)).to.be.eql(ethers.utils.parseEther('0'))
+
+        // ensure they're both allocated initial amounts
+        expect(await myOFTA.balanceOf(ownerA.address)).to.eql(ethers.utils.parseEther('0'))
+        expect(await myOFTB.balanceOf(ownerA.address)).to.eql(ethers.utils.parseEther('0'))
+        expect(await ethers.provider.getBalance(myOFTA.address)).to.eql(ethers.utils.parseEther('0'))
+
+        const depositAmount = ethers.utils.parseEther('4.000000000000000001')
+        await myOFTA.deposit({ value: depositAmount })
+
+        expect(await myOFTA.balanceOf(ownerA.address)).to.eql(depositAmount)
+        expect(await ethers.provider.getBalance(myOFTA.address)).to.be.eql(depositAmount)
+
+        const leftOverAmount = ethers.utils.parseEther('0.000000000000000001')
+        const totalAmount = ethers.utils.parseEther('4.000000000000000001')
+        const totalAmountMinusDust = ethers.utils.parseEther('4')
+
+        // Defining extra message execution options for the send operation
+        // @dev: The amount of gas you'd provide for the lzReceive call in source chain native tokens. 200000 should be enough for most transactions.
+        const options = Options.newOptions().addExecutorLzReceiveOption(200000, 0).toHex().toString()
+
+        const sendParam = [
+            eidB,
+            ethers.utils.zeroPad(ownerB.address, 32),
+            totalAmount,
+            totalAmountMinusDust,
+            options,
+            '0x',
+            '0x',
+        ]
+
+        // Fetching the native fee for the token send operation
+        const [nativeFee] = await myOFTA.quoteSend(sendParam, false)
+
+        // Executing the send operation from myOFTA contract
+        await myOFTA.send(sendParam, [nativeFee, 0], ownerA.address, {
+            value: nativeFee.add(totalAmount.sub(depositAmount)),
+        })
+        expect(await ethers.provider.getBalance(myOFTA.address)).to.be.eql(totalAmount)
+        expect(await ethers.provider.getBalance(mockEndpointV2A.address)).to.be.eql(nativeFee) // collects
+        expect(await ethers.provider.getBalance(mockEndpointV2B.address)).to.be.eql(ethers.utils.parseEther('0'))
+        expect(await myOFTA.balanceOf(myOFTA.address)).to.be.eql(totalAmountMinusDust)
+        expect(await myOFTA.balanceOf(ownerA.address)).to.be.eql(leftOverAmount)
+        expect(await myOFTB.balanceOf(ownerB.address)).to.be.eql(totalAmountMinusDust)
+        expect(await myOFTB.totalSupply()).to.be.eql(totalAmountMinusDust)
     })
 })
