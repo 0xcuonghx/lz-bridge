@@ -1,9 +1,12 @@
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers'
-import { expect } from 'chai'
+import { expect, use } from 'chai'
+import chaiAsPromise from 'chai-as-promised'
 import { Contract, ContractFactory } from 'ethers'
 import { deployments, ethers } from 'hardhat'
 
 import { Options } from '@layerzerolabs/lz-v2-utilities'
+
+use(chaiAsPromise)
 
 describe('MyNativeOFT Test', function () {
     // Constant representing a mock Endpoint ID for testing purposes
@@ -159,5 +162,85 @@ describe('MyNativeOFT Test', function () {
         expect(await myOFTA.balanceOf(ownerA.address)).to.be.eql(leftOverAmount)
         expect(await myOFTB.balanceOf(ownerB.address)).to.be.eql(totalAmountMinusDust)
         expect(await myOFTB.totalSupply()).to.be.eql(totalAmountMinusDust)
+    })
+
+    it('should send a token from A address to B address via each OFT with insufficient value and expect revert', async function () {
+        expect(await ethers.provider.getBalance(mockEndpointV2A.address)).to.be.eql(ethers.utils.parseEther('0'))
+
+        // ensure they're both allocated initial amounts
+        expect(await myOFTA.balanceOf(ownerA.address)).to.eql(ethers.utils.parseEther('0'))
+        expect(await myOFTB.balanceOf(ownerA.address)).to.eql(ethers.utils.parseEther('0'))
+        expect(await ethers.provider.getBalance(myOFTA.address)).to.eql(ethers.utils.parseEther('0'))
+
+        const depositAmount = ethers.utils.parseEther('4')
+        await myOFTA.deposit({ value: depositAmount })
+
+        expect(await myOFTA.balanceOf(ownerA.address)).to.eql(depositAmount)
+        expect(await ethers.provider.getBalance(myOFTA.address)).to.be.eql(depositAmount)
+
+        const totalAmount = ethers.utils.parseEther('8')
+        const messageFee = ethers.utils.parseEther('3')
+        // Defining extra message execution options for the send operation
+        // @dev: The amount of gas you'd provide for the lzReceive call in source chain native tokens. 200000 should be enough for most transactions.
+        const options = Options.newOptions().addExecutorLzReceiveOption(200000, 0).toHex().toString()
+
+        const sendParam = [
+            eidB,
+            ethers.utils.zeroPad(ownerB.address, 32),
+            totalAmount,
+            totalAmount,
+            options,
+            '0x',
+            '0x',
+        ]
+
+        // Fetching the native fee for the token send operation
+        const [nativeFee] = await myOFTA.quoteSend(sendParam, false)
+
+        await expect(
+            myOFTA.send(sendParam, [nativeFee, 0], ownerA.address, {
+                value: messageFee,
+            })
+        ).to.be.rejectedWith('NativeOFT: Insufficient msg.value')
+    })
+
+    it('wrap() and unwrap()', async function () {
+        const ownerBalance = await ethers.provider.getBalance(ownerA.address)
+        expect(await ethers.provider.getBalance(mockEndpointV2A.address)).to.be.eql(ethers.utils.parseEther('0'))
+        expect(await myOFTA.balanceOf(ownerA.address)).to.eql(ethers.utils.parseEther('0'))
+
+        const amount = ethers.utils.parseEther('100.000000000000000001')
+        await myOFTA.deposit({ value: amount })
+
+        let transFee = ownerBalance.sub(await ethers.provider.getBalance(ownerA.address)).sub(amount)
+
+        expect(await ethers.provider.getBalance(myOFTA.address)).to.be.eql(amount)
+        expect(await ethers.provider.getBalance(ownerA.address)).to.be.eql(ownerBalance.sub(amount).sub(transFee))
+        expect(await myOFTA.balanceOf(ownerA.address)).to.be.eql(amount)
+
+        await myOFTA.withdraw(amount)
+        transFee = ownerBalance.sub(await ethers.provider.getBalance(ownerA.address))
+
+        expect(await ethers.provider.getBalance(myOFTA.address)).to.be.eql(ethers.utils.parseEther('0'))
+        expect(await ethers.provider.getBalance(ownerA.address)).to.be.eql(ownerBalance.sub(transFee))
+        expect(await myOFTA.balanceOf(ownerA.address)).to.be.eql(ethers.utils.parseEther('0'))
+    })
+
+    it('wrap() and unwrap() expect revert', async function () {
+        const ownerBalance = await ethers.provider.getBalance(ownerA.address)
+        expect(await ethers.provider.getBalance(mockEndpointV2A.address)).to.be.eql(ethers.utils.parseEther('0'))
+        expect(await myOFTA.balanceOf(ownerA.address)).to.eql(ethers.utils.parseEther('0'))
+
+        let amount = ethers.utils.parseEther('100')
+        await myOFTA.deposit({ value: amount })
+
+        const transFee = ownerBalance.sub(await ethers.provider.getBalance(ownerA.address)).sub(amount)
+
+        expect(await ethers.provider.getBalance(myOFTA.address)).to.be.eql(amount)
+        expect(await ethers.provider.getBalance(ownerA.address)).to.be.eql(ownerBalance.sub(amount).sub(transFee))
+        expect(await myOFTA.balanceOf(ownerA.address)).to.be.eql(amount)
+
+        amount = ethers.utils.parseEther('150')
+        await expect(myOFTA.withdraw(amount)).to.be.rejectedWith('NativeOFT: Insufficient balance.')
     })
 })

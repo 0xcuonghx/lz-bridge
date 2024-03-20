@@ -66,12 +66,18 @@ devDependencies:
   '@types/chai':
     specifier: ^4.3.11
     version: 4.3.12
+  '@types/chai-as-promised':
+    specifier: ^7.1.8
+    version: 7.1.8
   '@types/mocha':
     specifier: ^10.0.6
     version: 10.0.6
   chai:
     specifier: ^4.4.1
     version: 4.4.1
+  chai-as-promised:
+    specifier: ^7.1.1
+    version: 7.1.1(chai@4.4.1)
   dotenv:
     specifier: ^16.4.1
     version: 16.4.5
@@ -2002,6 +2008,12 @@ packages:
       '@types/responselike': 1.0.3
     dev: true
 
+  /@types/chai-as-promised@7.1.8:
+    resolution: {integrity: sha512-ThlRVIJhr69FLlh6IctTXFkmhtP3NpMZ2QGq69StYLyKZFp/HOp1VdKZj7RvfNWYYcJ1xlbLGLLWj1UvP5u/Gw==}
+    dependencies:
+      '@types/chai': 4.3.12
+    dev: true
+
   /@types/chai@4.3.12:
     resolution: {integrity: sha512-zNKDHG/1yxm8Il6uCCVsm+dRdEsJlFoDu73X17y09bId6UwoYww+vFBsAcRzl8knM1sab3Dp1VRikFQwDOtDDw==}
     dev: true
@@ -2818,6 +2830,15 @@ packages:
 
   /caseless@0.12.0:
     resolution: {integrity: sha512-4tYFyifaFfGacoiObjJegolkwSU4xQNGbVgUiNYVUxbQ2x2lUsFvY4hVgVzGiIe6WLOPqycWXA40l+PWsxthUw==}
+    dev: true
+
+  /chai-as-promised@7.1.1(chai@4.4.1):
+    resolution: {integrity: sha512-azL6xMoi+uxu6z4rhWQ1jbdUhOMhis2PvscD/xjLqNMkv3BPPp2JyyuTHOrf9BOosGpNQ11v6BKv/g57RXbiaA==}
+    peerDependencies:
+      chai: '>= 2.1.2 < 5'
+    dependencies:
+      chai: 4.4.1
+      check-error: 1.0.3
     dev: true
 
   /chai@4.4.1:
