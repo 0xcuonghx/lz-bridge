@@ -3,7 +3,7 @@ import { EndpointId } from '@layerzerolabs/lz-definitions'
 
 const sepoliaContract = {
     eid: EndpointId.SEPOLIA_V2_TESTNET,
-    contractName: 'MyOFT',
+    contractName: 'MyONFTMock',
 }
 
 // const fujiContract = {
@@ -18,7 +18,7 @@ const sepoliaContract = {
 
 const joctContract = {
     eid: EndpointId.JOC_V2_TESTNET,
-    contractName: 'MyOFT',
+    contractName: 'MyONFTMock',
 }
 
 export default {

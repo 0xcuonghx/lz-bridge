@@ -51,7 +51,7 @@ const config: HardhatUserConfig = {
     networks: {
         sepolia: {
             eid: EndpointId.SEPOLIA_V2_TESTNET,
-            url: 'https://rpc.sepolia.org/',
+            url: 'https://sepolia.drpc.org',
             accounts,
         },
         fuji: {

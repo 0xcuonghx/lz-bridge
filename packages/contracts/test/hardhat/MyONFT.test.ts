@@ -70,6 +70,9 @@ describe.only('MyONFT Test', function () {
         const initialTokenId = 1
         await myONFTA.mint(ownerA.address, initialTokenId)
 
+        console.log(await myONFTA.balanceOf(ownerA.address))
+        console.log(await myONFTB.balanceOf(ownerB.address))
+
         // Defining the amount of tokens to send and constructing the parameters
 
         // Defining extra message execution options for the send operation
