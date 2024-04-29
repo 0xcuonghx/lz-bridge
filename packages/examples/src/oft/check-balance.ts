@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import assert from "assert";
 
-import OftAbi from "./abis/OFT.json";
+import OftAbi from "../abis/OFT.json";
 import "dotenv/config";
 
 async function main() {

@@ -109,15 +109,8 @@ By following these steps, you can focus more on creating innovative omnichain so
   Join our community on <a href="https://discord-layerzero.netlify.app/discord" style="color: #a77dff">Discord</a> | Follow us on <a href="https://twitter.com/LayerZero_Labs" style="color: #a77dff">Twitter</a>
 </p>
 
-# To-dos
+## 3) Config pathway
 
-## FT
-
-- [x] OFT - OFT
-- [x] OFTAdapter - OFT
-- [ ] OFTNative - OFT
-  - https://github.com/LayerZero-Labs/LayerZero-v2/issues/24
-- [ ] Fee
-- [ ] OFT composing
-
-## NFT
+```bash
+npx hardhat lz:oapp:wire --oapp-config layerzero.config.ts
+```

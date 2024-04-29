@@ -1,7 +1,9 @@
 import { ethers } from "ethers";
 import assert from "assert";
 
-import OftAbi from "./abis/OFT.json";
+import NativeOftAbi from "../abis/NativeOFT.json";
+import OftAbi from "../abis/OFT.json";
+
 import { Options } from "@layerzerolabs/lz-v2-utilities";
 import "dotenv/config";
 
@@ -13,7 +15,11 @@ async function main() {
   const rpcA = new ethers.JsonRpcProvider(process.env.RPC_A);
   const ownerA = new ethers.Wallet(process.env.PRIVATE_KEY, rpcA);
   assert(process.env.OFT_A_ADDRESS, "Missing OFT_A_ADDRESS");
-  const myOFTA = new ethers.Contract(process.env.OFT_A_ADDRESS, OftAbi, ownerA);
+  const myOFTA = new ethers.Contract(
+    process.env.OFT_A_ADDRESS,
+    NativeOftAbi,
+    ownerA
+  );
 
   // B
   const eidB = process.env.ENDPOINT_ID_B;
@@ -22,10 +28,10 @@ async function main() {
   assert(process.env.OFT_B_ADDRESS, "Missing OFT_B_ADDRESS");
   const myOFTB = new ethers.Contract(process.env.OFT_B_ADDRESS, OftAbi, ownerB);
 
-  // Step up
-  // const initialAmount = ethers.parseEther("100");
-  // tx = await myOFTA.mint(ownerA.address, initialAmount);
-  // tx.wait();
+  // 1. Deposit
+  const depositAmount = ethers.parseEther("0.01");
+  tx = await myOFTA.deposit({ value: depositAmount });
+  tx.wait();
 
   console.log("owner A: ", ownerA.address);
   console.log("owner B: ", ownerB.address);
@@ -40,7 +46,7 @@ async function main() {
   );
 
   // Defining the amount of tokens to send and constructing the parameters for the send operation
-  const tokensToSend = ethers.parseEther("1");
+  const tokensToSend = ethers.parseEther("0.01");
   console.log("Balance send A to B: ", tokensToSend.toString());
 
   // Defining extra message execution options for the send operation
