@@ -31,13 +31,13 @@ async function main() {
   );
 
   // 1. Config rate
-  tx = await myFixedRateA.setRate(eidB, 5, 1);
+  tx = await myFixedRateA.setRate(eidB, 2, 1);
   await tx.wait();
-  tx = await myFixedRateB.setRate(eidA, 1, 5);
+  tx = await myFixedRateB.setRate(eidA, 1, 2);
   await tx.wait();
 
   // 2. Deposit token
-  tx = await myFixedRateA.deposit({ value: ethers.parseEther("0.1") });
+  tx = await myFixedRateB.deposit({ value: ethers.parseEther("0.01") });
   await tx.wait();
 
   console.log(
