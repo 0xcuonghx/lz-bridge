@@ -54,16 +54,6 @@ const config: HardhatUserConfig = {
             url: 'https://sepolia.drpc.org',
             accounts,
         },
-        fuji: {
-            eid: EndpointId.AVALANCHE_V2_TESTNET,
-            url: 'https://rpc.ankr.com/avalanche_fuji',
-            accounts,
-        },
-        mumbai: {
-            eid: EndpointId.POLYGON_V2_TESTNET,
-            url: 'https://rpc.ankr.com/polygon_mumbai',
-            accounts,
-        },
         joct: {
             eid: EndpointId.JOC_V2_TESTNET,
             url: 'https://rpc-1.testnet.japanopenchain.org:8545',

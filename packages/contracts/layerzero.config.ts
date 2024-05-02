@@ -3,12 +3,12 @@ import { EndpointId } from '@layerzerolabs/lz-definitions'
 
 const sepoliaContract = {
     eid: EndpointId.SEPOLIA_V2_TESTNET,
-    contractName: 'FixedRate',
+    contractName: 'MyOFTMock',
 }
 
 const joctContract = {
     eid: EndpointId.JOC_V2_TESTNET,
-    contractName: 'FixedRate',
+    contractName: 'MyOFTMock',
 }
 
 export default {
