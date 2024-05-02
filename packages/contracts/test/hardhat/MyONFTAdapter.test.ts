@@ -86,7 +86,7 @@ describe('MyOFTAdapter Test', function () {
     })
 
     // A test case to verify token transfer functionality
-    it.only('should send a token from A address to B address via each ONFTAdapter', async function () {
+    it('should send a token from A address to B address via each ONFTAdapter', async function () {
         // Minting an initial amount of tokens to ownerA's address in the myOFTA contract
         const tokenId = 123
         await erc721.safeMint(ownerA.address, tokenId)
