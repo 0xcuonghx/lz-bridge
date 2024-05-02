@@ -59,6 +59,11 @@ const config: HardhatUserConfig = {
             url: 'https://rpc-1.testnet.japanopenchain.org:8545',
             accounts,
         },
+        arbsep: {
+            eid: EndpointId.ARBSEP_V2_TESTNET,
+            url: 'https://arbitrum-sepolia.blockpi.network/v1/rpc/public',
+            accounts,
+        },
     },
     namedAccounts: {
         deployer: {

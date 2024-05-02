@@ -11,6 +11,11 @@ const joctContract = {
     contractName: 'FixedRate',
 }
 
+const arbsepContract = {
+    eid: EndpointId.ARBSEP_V2_TESTNET,
+    contractName: 'FixedRate',
+}
+
 export default {
     contracts: [
         {
@@ -19,6 +24,9 @@ export default {
 
         {
             contract: joctContract,
+        },
+        {
+            contract: arbsepContract,
         },
     ],
     connections: [
@@ -29,6 +37,14 @@ export default {
         {
             from: sepoliaContract,
             to: joctContract,
+        },
+        {
+            from: arbsepContract,
+            to: sepoliaContract,
+        },
+        {
+            from: sepoliaContract,
+            to: arbsepContract,
         },
     ],
 }
