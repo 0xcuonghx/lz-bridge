@@ -42,8 +42,8 @@ async function main() {
   console.log("playerA", formatEther(await rpcA.getBalance(playerA.address)));
   console.log("playerB", formatEther(await rpcB.getBalance(playerB.address)));
 
-  const tokensToSend = ethers.parseEther("0.0001");
-  console.log("Balance send from A to B: ", formatEther(tokensToSend));
+  const tokensToSend = ethers.parseEther("0.001");
+  console.log("Balance send from B to A: ", formatEther(tokensToSend));
 
   // Defining extra message execution options for the send operation
   // @dev: The amount of gas you'd provide for the lzReceive call in source chain native tokens. 200000 should be enough for most transactions.
@@ -53,18 +53,18 @@ async function main() {
     .toString();
 
   const sendParam = [
-    eidB,
+    eidA,
     ethers.zeroPadValue(playerB.address, 32),
     tokensToSend,
     options,
   ];
 
   // Fetching the native fee for the token send operation
-  const [nativeFee] = await myFixedRateA.quote(sendParam, false);
+  const [nativeFee] = await myFixedRateB.quote(sendParam, false);
   console.log("Fee", formatEther(nativeFee));
 
   // Executing the send operation from myOFTA contract
-  tx = await myFixedRateA.send(sendParam, [nativeFee, 0], playerA.address, {
+  tx = await myFixedRateB.send(sendParam, [nativeFee, 0], playerA.address, {
     value: nativeFee + tokensToSend,
   });
   tx.wait();

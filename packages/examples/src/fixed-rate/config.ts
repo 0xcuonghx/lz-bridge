@@ -39,6 +39,8 @@ async function main() {
   // 2. Deposit token
   tx = await myFixedRateB.deposit({ value: ethers.parseEther("0.01") });
   await tx.wait();
+  tx = await myFixedRateA.deposit({ value: ethers.parseEther("0.01") });
+  await tx.wait();
 
   console.log(
     "myFixedRateA",
