@@ -31,19 +31,11 @@ export default {
     ],
     connections: [
         {
-            from: joctContract,
-            to: sepoliaContract,
-        },
-        {
-            from: sepoliaContract,
+            from: arbsepContract,
             to: joctContract,
         },
         {
-            from: arbsepContract,
-            to: sepoliaContract,
-        },
-        {
-            from: sepoliaContract,
+            from: joctContract,
             to: arbsepContract,
         },
     ],

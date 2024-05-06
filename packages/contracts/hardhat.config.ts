@@ -44,6 +44,7 @@ const config: HardhatUserConfig = {
                         enabled: true,
                         runs: 200,
                     },
+                    evmVersion: 'london',
                 },
             },
         ],
@@ -51,7 +52,7 @@ const config: HardhatUserConfig = {
     networks: {
         sepolia: {
             eid: EndpointId.SEPOLIA_V2_TESTNET,
-            url: 'https://sepolia.drpc.org',
+            url: 'https://eth-sepolia.api.onfinality.io/public',
             accounts,
         },
         joct: {
