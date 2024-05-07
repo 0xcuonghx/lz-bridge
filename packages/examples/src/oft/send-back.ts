@@ -23,11 +23,6 @@ async function main() {
   assert(process.env.OFT_B_ADDRESS, "Missing OFT_B_ADDRESS");
   const myOFTB = new ethers.Contract(process.env.OFT_B_ADDRESS, OftAbi, ownerB);
 
-  // Step up
-  // const initialAmount = ethers.parseEther("100");
-  // tx = await myOFTA.mint(ownerA.address, initialAmount);
-  // tx.wait();
-
   console.log("owner A: ", ownerA.address);
   console.log("owner B: ", ownerB.address);
 

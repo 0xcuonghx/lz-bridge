@@ -1,27 +1,23 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 
-const sepoliaContract = {
-    eid: EndpointId.SEPOLIA_V2_TESTNET,
-    contractName: 'FixedRate',
-}
+// const sepoliaContract = {
+//     eid: EndpointId.SEPOLIA_V2_TESTNET,
+//     contractName: 'MyOFTMock',
+// }
 
 const joctContract = {
     eid: EndpointId.JOC_V2_TESTNET,
-    contractName: 'FixedRate',
+    contractName: 'MyOFTMock',
 }
 
 const arbsepContract = {
     eid: EndpointId.ARBSEP_V2_TESTNET,
-    contractName: 'FixedRate',
+    contractName: 'MyOFTMock',
 }
 
 export default {
     contracts: [
-        {
-            contract: sepoliaContract,
-        },
-
         {
             contract: joctContract,
         },

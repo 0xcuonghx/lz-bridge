@@ -23,9 +23,9 @@ async function main() {
   const myOFTB = new ethers.Contract(process.env.OFT_B_ADDRESS, OftAbi, ownerB);
 
   // Step up
-  // const initialAmount = ethers.parseEther("100");
-  // tx = await myOFTA.mint(ownerA.address, initialAmount);
-  // tx.wait();
+  const initialAmount = ethers.parseEther("100");
+  tx = await myOFTA.mint(ownerA.address, initialAmount);
+  tx.wait();
 
   console.log("owner A: ", ownerA.address);
   console.log("owner B: ", ownerB.address);
