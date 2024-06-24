@@ -37,7 +37,7 @@ async function main() {
 
   // Defining the amount of tokens to send and constructing the parameters for the send operation
   const tokensToSend = ethers.parseEther("1");
-  console.log("Balance send A to B: ", tokensToSend.toString());
+  console.log("Balance send B to A: ", tokensToSend.toString());
 
   // Defining extra message execution options for the send operation
   // @dev: The amount of gas you'd provide for the lzReceive call in source chain native tokens. 200000 should be enough for most transactions.

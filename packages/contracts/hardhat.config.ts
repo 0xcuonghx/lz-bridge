@@ -50,11 +50,6 @@ const config: HardhatUserConfig = {
         ],
     },
     networks: {
-        sepolia: {
-            eid: EndpointId.SEPOLIA_V2_TESTNET,
-            url: 'https://eth-sepolia.api.onfinality.io/public',
-            accounts,
-        },
         joct: {
             eid: EndpointId.JOC_V2_TESTNET,
             url: 'https://rpc-1.testnet.japanopenchain.org:8545',
@@ -63,6 +58,16 @@ const config: HardhatUserConfig = {
         arbsep: {
             eid: EndpointId.ARBSEP_V2_TESTNET,
             url: 'https://arbitrum-sepolia.blockpi.network/v1/rpc/public',
+            accounts,
+        },
+        joc: {
+            eid: EndpointId.JOC_V2_MAINNET,
+            url: 'https://rpc-1.japanopenchain.org:8545',
+            accounts,
+        },
+        polygon: {
+            eid: EndpointId.POLYGON_V2_MAINNET,
+            url: 'https://polygon.rpc.blxrbdn.com',
             accounts,
         },
     },

@@ -27,8 +27,8 @@ async function main() {
   tx = await myOFTA.mint(ownerA.address, initialAmount);
   tx.wait();
 
-  tx = await myOFTB.mint(ownerB.address, initialAmount);
-  tx.wait();
+  // tx = await myOFTB.mint(ownerB.address, initialAmount);
+  // tx.wait();
 
   console.log("Balance at A: ", await myOFTA.balanceOf(ownerA.address));
   console.log("Balance at B: ", await myOFTB.balanceOf(ownerB.address));

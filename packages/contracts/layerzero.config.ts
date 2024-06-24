@@ -1,11 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 
-// const sepoliaContract = {
-//     eid: EndpointId.SEPOLIA_V2_TESTNET,
-//     contractName: 'MyOFTMock',
-// }
-
 const joctContract = {
     eid: EndpointId.JOC_V2_TESTNET,
     contractName: 'MyOFTMock',
@@ -16,23 +11,47 @@ const arbsepContract = {
     contractName: 'MyOFTMock',
 }
 
+const jocContract = {
+    eid: EndpointId.JOC_V2_MAINNET,
+    contractName: 'MyOFTMock',
+}
+
+const polygonContract = {
+    eid: EndpointId.POLYGON_V2_MAINNET,
+    contractName: 'MyOFTMock',
+}
+
 export default {
     contracts: [
+        // {
+        //     contract: joctContract,
+        // },
+        // {
+        //     contract: arbsepContract,
+        // },
         {
-            contract: joctContract,
+            contract: jocContract,
         },
         {
-            contract: arbsepContract,
+            contract: polygonContract,
         },
     ],
     connections: [
+        // {
+        //     from: arbsepContract,
+        //     to: joctContract,
+        // },
+        // {
+        //     from: joctContract,
+        //     to: arbsepContract,
+        // },
         {
-            from: arbsepContract,
-            to: joctContract,
+            from: jocContract,
+            to: polygonContract,
         },
         {
-            from: joctContract,
-            to: arbsepContract,
+            from: polygonContract,
+            to: jocContract,
         },
     ],
 }

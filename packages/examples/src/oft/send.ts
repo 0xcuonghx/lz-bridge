@@ -23,9 +23,6 @@ async function main() {
   const myOFTB = new ethers.Contract(process.env.OFT_B_ADDRESS, OftAbi, ownerB);
 
   // Step up
-  const initialAmount = ethers.parseEther("100");
-  tx = await myOFTA.mint(ownerA.address, initialAmount);
-  tx.wait();
 
   console.log("owner A: ", ownerA.address);
   console.log("owner B: ", ownerB.address);
@@ -62,7 +59,6 @@ async function main() {
 
   // Fetching the native fee for the token send operation
   const [nativeFee] = await myOFTA.quoteSend(sendParam, false);
-
   // Executing the send operation from myOFTA contract
   tx = await myOFTA.send(sendParam, [nativeFee, 0], ownerA.address, {
     value: nativeFee,
