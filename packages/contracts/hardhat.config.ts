@@ -57,7 +57,7 @@ const config: HardhatUserConfig = {
         },
         arbsep: {
             eid: EndpointId.ARBSEP_V2_TESTNET,
-            url: 'https://arbitrum-sepolia.blockpi.network/v1/rpc/public',
+            url: 'https://sepolia-rollup.arbitrum.io/rpc',
             accounts,
         },
         joc: {

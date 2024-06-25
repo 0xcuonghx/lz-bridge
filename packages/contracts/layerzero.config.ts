@@ -23,12 +23,12 @@ const polygonContract = {
 
 export default {
     contracts: [
-        // {
-        //     contract: joctContract,
-        // },
-        // {
-        //     contract: arbsepContract,
-        // },
+        {
+            contract: joctContract,
+        },
+        {
+            contract: arbsepContract,
+        },
         {
             contract: jocContract,
         },
@@ -37,14 +37,14 @@ export default {
         },
     ],
     connections: [
-        // {
-        //     from: arbsepContract,
-        //     to: joctContract,
-        // },
-        // {
-        //     from: joctContract,
-        //     to: arbsepContract,
-        // },
+        {
+            from: arbsepContract,
+            to: joctContract,
+        },
+        {
+            from: joctContract,
+            to: arbsepContract,
+        },
         {
             from: jocContract,
             to: polygonContract,
